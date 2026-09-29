@@ -1,4 +1,4 @@
-streamlit
-tensorflow==2.21.0
+Flask
 numpy
 Pillow
+tensorflow==2.21.0
