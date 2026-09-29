@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroVision — Brain Tumor Detection & Classification</title>
+    <!-- Google Fonts & Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Soft Rose Pink Page Background */
+        body {
+            background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 50%, #fecdd3 100%) !important;
+            min-height: 100vh;
+            color: #800020;
+            padding: 24px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo-icon {
+            color: #800020;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #800020;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-pipe {
+            color: #f43f5e;
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .brand-tagline {
+            font-size: 0.95rem;
+            color: #800020;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ffffff;
+            color: #800020;
+            padding: 8px 20px;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border: 1px solid #fecdd3;
+            box-shadow: 0 2px 6px rgba(128, 0, 32, 0.08);
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #800020;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 6px 12px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr 1fr;
+            gap: 24px;
+            align-items: stretch;
+            margin-bottom: 24px;
+        }
+
+        /* Left Hero Typography */
+        .col-hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .hero-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #5c061e;
+            line-height: 1.1;
+        }
+
+        .pink-heart {
+            color: #e11d48;
+            font-size: 2rem;
+        }
+
+        .hero-heading {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #800020;
+            line-height: 1.3;
+            margin-top: 14px;
+        }
+
+        .hero-subtext {
+            font-size: 0.95rem;
+            color: #800020;
+            line-height: 1.5;
+            margin-top: 12px;
+            font-weight: 600;
+        }
+
+        .hero-quote {
+            font-size: 0.88rem;
+            color: #9f1239;
+            margin-top: 28px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* White Cards Base */
+        .col-upload,
+        .col-classes,
+        .features-strip,
+        .bottom-card {
+            background: #ffffff !important;
+            border-radius: 24px;
+            border: 1px solid #ffe4e6 !important;
+            box-shadow: 0 10px 30px rgba(244, 63, 94, 0.08) !important;
+        }
+
+        /* Upload Box */
+        .col-upload {
+            padding: 24px;
+            display: flex;
+        }
+
+        .dropzone-inner {
+            border: 2px dashed #fda4af;
+            border-radius: 18px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 20px;
+            text-align: center;
+            background: #fff5f6;
+        }
+
+        .cloud-wrap {
+            color: #800020;
+            margin-bottom: 12px;
+        }
+
+        .drop-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #800020;
+            margin-bottom: 6px;
+        }
+
+        .drop-hint {
+            font-size: 0.85rem;
+            color: #800020;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .drop-hint span {
+            font-size: 0.75rem;
+            color: #9f1239;
+            font-weight: 600;
+        }
+
+        .btn-upload {
+            background: linear-gradient(135deg, #800020 0%, #a21caf 100%);
+            color: #ffffff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.25);
+            transition: transform 0.15s ease;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-1px);
+        }
+
+        .status-box {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #800020;
+        }
+
+        /* 4 Classes Box */
+        .col-classes {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .classes-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #800020;
+            margin-bottom: 18px;
+        }
+
+        .classes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            height: 100%;
+        }
+
+        /* Clickable Cards */
+        .class-card {
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 8px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            gap: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .class-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .class-card:active {
+            transform: scale(0.98);
+        }
+
+        .class-card.glioma {
+            background: #e0f2fe !important;
+            color: #0369a1 !important;
+            border-color: #bae6fd;
+        }
+
+        .class-card.meningioma {
+            background: #f3e8ff !important;
+            color: #7e22ce !important;
+            border-color: #e9d5ff;
+        }
+
+        .class-card.pituitary {
+            background: #ffedd5 !important;
+            color: #c2410c !important;
+            border-color: #fed7aa;
+        }
+
+        .class-card.no-tumor {
+            background: #dcfce7 !important;
+            color: #15803d !important;
+            border-color: #bbf7d0;
+        }
+
+        /* Features Strip (Maroon Text) */
+        .features-strip {
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .feature-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .v-sep {
+            width: 1px;
+            height: 44px;
+            background: #fecdd3;
+        }
+
+        .f-icon-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .f-icon-circle.purple { background: #f3e8ff; color: #800020; }
+        .f-icon-circle.pink   { background: #ffe4e6; color: #800020; }
+        .f-icon-circle.blue   { background: #e0f2fe; color: #800020; }
+        .f-icon-circle.green  { background: #dcfce7; color: #800020; }
+        .f-icon-circle.coral  { background: #ffedd5; color: #800020; }
+
+        .feature-box h5 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #800020 !important;
+        }
+
+        .feature-box p {
+            font-size: 0.74rem;
+            color: #800020 !important;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        /* Bottom Card: How It Works */
+        .bottom-card {
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .steps-wrapper h5 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #800020 !important;
+            margin-bottom: 14px;
+        }
+
+        .steps-wrapper h5 span { color: #e11d48; }
+
+        .steps-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            color: white;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #800020 !important;
+        }
+
+        .step-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-info strong {
+            display: block;
+            font-size: 0.85rem;
+            color: #800020 !important;
+            font-weight: 800;
+        }
+
+        .step-info p {
+            font-size: 0.72rem;
+            color: #800020 !important;
+            font-weight: 500;
+        }
+
+        .arrow-sep {
+            color: #fda4af;
+            font-weight: bold;
+        }
+
+        .tagline-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #800020 !important;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .tagline-badge span {
+            font-size: 1.8rem;
+            color: #e11d48;
+        }
+
+        /* Footer */
+        .site-footer {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: #800020;
+            font-weight: 600;
+        }
+
+        /* Modal Overlay & Box */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(80, 0, 20, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #ffffff;
+            border-radius: 24px;
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 2px solid #fecdd3;
+            box-shadow: 0 20px 40px rgba(128, 0, 32, 0.25);
+            padding: 32px 36px;
+            position: relative;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            border-bottom: 2px solid #ffe4e6;
+            padding-bottom: 14px;
+        }
+
+        .modal-title-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-tag {
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 800;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #800020;
+        }
+
+        .btn-close {
+            background: #ffe4e6;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #800020;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-close:hover {
+            background: #800020;
+            color: #ffffff;
+        }
+
+        .modal-body p {
+            color: #4a0418;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            margin-bottom: 14px;
+            font-weight: 500;
+            text-align: justify;
+        }
+
+        .modal-body p:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <span class="brand-logo-icon"><i data-lucide="brain" style="width:34px; height:34px;"></i></span>
+            <span class="brand-name">NeuroVision</span>
+            <span class="brand-pipe">|</span>
+            <span class="brand-tagline">Brain Tumor Detection & Classification</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#" class="nav-pill"><i data-lucide="home" style="width:16px; height:16px;"></i> Home</a>
+            <a href="#" class="nav-link"><i data-lucide="info" style="width:16px; height:16px;"></i> About</a>
+            <a href="#" class="nav-link"><i data-lucide="bar-chart-2" style="width:16px; height:16px;"></i> Results</a>
+        </nav>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="main-grid">
+        <!-- Hero Text -->
+        <section class="col-hero">
+            <h1 class="hero-title">NeuroVision <span class="pink-heart">♥</span></h1>
+            <h2 class="hero-heading">Brain Tumor Detection &<br>Classification</h2>
+            <p class="hero-subtext">From MRI Images Analysis<br>Using Deep Learning</p>
+            <p class="hero-quote">Early detection. Better decisions.<br>A healthier tomorrow. ♡</p>
+        </section>
+
+        <!-- 1st Box: Upload Box -->
+        <section class="col-upload">
+            <div class="dropzone-inner">
+                <div class="cloud-wrap">
+                    <i data-lucide="cloud-upload" style="width:60px; height:60px;"></i>
+                </div>
+                <h3 class="drop-title">Upload MRI Image</h3>
+                <p class="drop-hint">Click to browse or drag and drop<br><span>(JPG, PNG — Max 200MB)</span></p>
+                
+                <input type="file" id="fileInput" accept="image/*" style="display:none;">
+                <button class="btn-upload" onclick="document.getElementById('fileInput').click()">
+                    <i data-lucide="folder" style="width:18px; height:18px;"></i> Choose File
+                </button>
+                <div id="statusText" class="status-box"></div>
+            </div>
+        </section>
+
+        <!-- 2nd Box: 4 Classes (Clickable) -->
+        <section class="col-classes">
+            <div class="classes-title">
+                <i data-lucide="bar-chart-3" style="width:22px; height:22px;"></i> 4 Classes
+            </div>
+            <div class="classes-grid">
+                <!-- 1. Glioma -->
+                <div class="class-card glioma" onclick="openClassModal('glioma')">
+                    <i data-lucide="brain" style="width:36px; height:36px;"></i>
+                    <span>Glioma</span>
+                </div>
+                <!-- 2. Meningioma -->
+                <div class="class-card meningioma" onclick="openClassModal('meningioma')">
+                    <i data-lucide="brain" style="width:36px; height:36px;"></i>
+                    <span>Meningioma</span>
+                </div>
+                <!-- 3. Pituitary -->
+                <div class="class-card pituitary" onclick="openClassModal('pituitary')">
+                    <i data-lucide="brain" style="width:36px; height:36px;"></i>
+                    <span>Pituitary</span>
+                </div>
+                <!-- 4. No Tumor -->
+                <div class="class-card no-tumor" onclick="openClassModal('no_tumor')">
+                    <i data-lucide="ban" style="width:36px; height:36px;"></i>
+                    <span>No Tumor</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 3rd Box: Features Strip -->
+    <section class="features-strip">
+        <div class="feature-box">
+            <div class="f-icon-circle purple"><i data-lucide="brain" style="width:22px; height:22px;"></i></div>
+            <h5>Automated</h5>
+            <p>Reduces manual workload</p>
+        </div>
+        <div class="v-sep"></div>
+        <div class="feature-box">
+            <div class="f-icon-circle pink"><i data-lucide="crosshair" style="width:22px; height:22px;"></i></div>
+            <h5>Accurate</h5>
+            <p>High detection performance</p>
+        </div>
+        <div class="v-sep"></div>
+        <div class="feature-box">
+            <div class="f-icon-circle blue"><i data-lucide="zap" style="width:22px; height:22px;"></i></div>
+            <h5>Fast</h5>
+            <p>Quick analysis and results</p>
+        </div>
+        <div class="v-sep"></div>
+        <div class="feature-box">
+            <div class="f-icon-circle green"><i data-lucide="shield-plus" style="width:22px; height:22px;"></i></div>
+            <h5>Non-invasive</h5>
+            <p>Uses MRI images, no surgery needed</p>
+        </div>
+        <div class="v-sep"></div>
+        <div class="feature-box">
+            <div class="f-icon-circle coral"><i data-lucide="heart-pulse" style="width:22px; height:22px;"></i></div>
+            <h5>Better Care</h5>
+            <p>Supports early diagnosis and treatment</p>
+        </div>
+    </section>
+
+    <!-- 4th Box: How It Works -->
+    <section class="bottom-card">
+        <div class="steps-wrapper">
+            <h5><span>✦</span> How It Works?</h5>
+            <div class="steps-row">
+                <div class="step-num">1</div>
+                <div class="step-info">
+                    <i data-lucide="cloud-upload" style="width:20px; height:20px; color:#800020;"></i>
+                    <div>
+                        <strong>Upload MRI Image</strong>
+                        <p>Select or drag & drop your image</p>
+                    </div>
+                </div>
+
+                <span class="arrow-sep">→</span>
+
+                <div class="step-num">2</div>
+                <div class="step-info">
+                    <i data-lucide="brain" style="width:20px; height:20px; color:#800020;"></i>
+                    <div>
+                        <strong>AI Analysis</strong>
+                        <p>Deep learning model processes the image</p>
+                    </div>
+                </div>
+
+                <span class="arrow-sep">→</span>
+
+                <div class="step-num">3</div>
+                <div class="step-info">
+                    <i data-lucide="bar-chart-2" style="width:20px; height:20px; color:#800020;"></i>
+                    <div>
+                        <strong>Result</strong>
+                        <p>Get classification & confidence score</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tagline-badge">
+            <span>♡</span>
+            <div>Smarter Analysis.<br>Better Tomorrow.</div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <i data-lucide="brain" style="width:16px; height:16px;"></i> Developed as an Academic Machine Learning Project
+    </footer>
+
+    <!-- Interactive Information Modal Pop-up -->
+    <div id="classModal" class="modal-overlay" onclick="handleBackdropClick(event)">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title-group">
+                    <span id="modalTag" class="modal-tag">Class</span>
+                    <h3 id="modalTitle" class="modal-title">Title</h3>
+                </div>
+                <button class="btn-close" onclick="closeClassModal()">✕</button>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <!-- Exact paragraphs populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 4 Classes Exact Knowledge Base
+        const classDetails = {
+            glioma: {
+                title: "1. Glioma",
+                tag: "Glioma",
+                tagBg: "#e0f2fe",
+                tagColor: "#0369a1",
+                paragraphs: [
+                    "Glioma is a group of tumors that arise from glial cells or glial-related cells within the central nervous system. Glial cells normally support, protect, and maintain nerve cells in the brain and spinal cord. Gliomas can develop in different regions of the brain and spinal cord and can vary significantly in their biological behavior, growth rate, and clinical characteristics. Depending on their location and type, they may affect important functions such as movement, speech, memory, vision, coordination, or other neurological functions.",
+                    "Gliomas are not a single uniform type of tumor. They include several different subtypes and grades, and their characteristics can vary considerably. Some may grow relatively slowly, while others can be more aggressive. Modern medical classification considers factors such as microscopic appearance and molecular characteristics when determining the specific type and grade of a glioma.",
+                    "Magnetic Resonance Imaging (MRI) is an important tool for evaluating suspected gliomas because it provides detailed images of brain structures and can reveal abnormalities in tissue appearance, shape, and signal intensity. Different MRI sequences can provide complementary information about a lesion and its surrounding tissue.",
+                    "In the NeuroVision project, glioma is one of the four predefined image classes. The model is trained using labeled MRI images belonging to this category and learns visual patterns from the training data. When a new MRI image is provided, the model compares the learned patterns and assigns the image to one of the predefined categories. However, the model's classification should be regarded as an AI-assisted research result rather than a medical diagnosis, since actual diagnosis requires clinical assessment, appropriate imaging interpretation, and evaluation by qualified medical professionals."
+                ]
+            },
+            meningioma: {
+                title: "2. Meningioma",
+                tag: "Meningioma",
+                tagBg: "#f3e8ff",
+                tagColor: "#7e22ce",
+                paragraphs: [
+                    "Meningioma is a type of tumor that develops from the meninges, which are the protective membranes surrounding the brain and spinal cord. The meninges consist of several layers that help protect the central nervous system. Because meningiomas originate from these membranes rather than directly from brain tissue, they are often described as tumors arising from the coverings of the brain.",
+                    "Meningiomas can occur in different locations around the brain and spinal cord. Their effects can depend on their size, location, and growth characteristics. A small meningioma may not immediately produce noticeable symptoms, while a larger tumor can place pressure on nearby brain structures. Depending on its location, this pressure may be associated with symptoms such as headaches, seizures, changes in vision, weakness, or other neurological problems. However, symptoms vary from person to person and cannot be determined from an MRI classification alone.",
+                    "MRI is commonly used to visualize meningiomas because it provides detailed information about the brain and surrounding structures. MRI images can show an abnormal mass and provide information about its size, position, and relationship with nearby structures. Physicians may use different MRI sequences and, when appropriate, contrast-enhanced imaging to obtain additional information.",
+                    "Within the NeuroVision dataset, meningioma is one of the four classification categories. The model learns visual patterns from labeled MRI images belonging to the meningioma class and attempts to distinguish them from glioma, pituitary tumor, and no-tumor images. An important observation from our model evaluation is that meningioma images can sometimes be confused with other categories, demonstrating why error analysis is an important part of the project. NeuroVision is intended for educational and research purposes and should not be used as a standalone diagnostic system."
+                ]
+            },
+            pituitary: {
+                title: "3. Pituitary Tumor",
+                tag: "Pituitary Tumor",
+                tagBg: "#ffedd5",
+                tagColor: "#c2410c",
+                paragraphs: [
+                    "A pituitary tumor is an abnormal growth that develops in or around the pituitary gland, a small but important gland located at the base of the brain. The pituitary gland is often described as an important regulator of the body's endocrine system because it produces and controls hormones involved in processes such as growth, reproduction, metabolism, and the response to physiological changes.",
+                    "Many pituitary tumors are pituitary adenomas, which arise from cells of the pituitary gland. Their effects can vary depending on whether they produce hormones and how large they become. Some tumors may produce excessive amounts of particular hormones, while others may interfere with normal pituitary function. A larger tumor can also affect nearby structures because the pituitary gland is located close to important anatomical structures, including the optic pathways.",
+                    "MRI plays an important role in examining the pituitary region. Because of the gland's small size and complex location, high-quality imaging is particularly useful for identifying and evaluating abnormalities in this area. MRI can provide detailed information about the size and location of a lesion and its relationship to nearby structures. Clinical assessment and laboratory hormone testing may also be important when evaluating a suspected pituitary tumor.",
+                    "In the NeuroVision project, “Pituitary” is one of the four predefined image classes in the selected MRI dataset. The model learns visual features from labeled images in this category and uses those learned patterns when classifying new images. The purpose is to demonstrate multi-class medical image classification using machine learning and deep learning, rather than to provide a definitive diagnosis. A prediction such as “Pituitary” means that the image was classified into that dataset category by the trained model; it does not independently establish that a patient has a pituitary tumor."
+                ]
+            },
+            no_tumor: {
+                title: "4. No Tumor",
+                tag: "No Tumor",
+                tagBg: "#dcfce7",
+                tagColor: "#15803d",
+                paragraphs: [
+                    "No Tumor is the non-tumor category used in the NeuroVision dataset. It contains MRI images that are labeled as not belonging to the tumor categories represented by the dataset. Including this class is important because a practical image-classification system should not only distinguish between different tumor categories; it should also be able to recognize images that belong to the dataset's non-tumor category.",
+                    "From a machine learning perspective, the No Tumor class provides a reference group against which the three tumor-related categories can be compared. Without a non-tumor category, a model trained only on tumor images would be forced to select one of the tumor classes even when presented with an image from the dataset's no-tumor category. By including No Tumor as a separate class, the problem becomes a four-class classification task: Glioma → Meningioma → Pituitary → No Tumor.",
+                    "During training, the model receives labeled MRI images from all four categories. It learns visual representations from the training examples and then uses those representations to classify previously unseen images. During evaluation, the model's ability to correctly recognize the No Tumor category is measured along with its performance on the three tumor categories.",
+                    "It is important to interpret this category carefully. A model predicting “No Tumor” does not mean that the system has medically ruled out every possible abnormality or disease. It only means that the image was classified into the No Tumor category according to the patterns learned from the selected dataset. In a real clinical environment, MRI interpretation requires appropriate imaging protocols, clinical information, and assessment by qualified healthcare professionals. Therefore, NeuroVision presents this category as part of an AI-assisted educational and research classification system, not as a replacement for clinical diagnosis."
+                ]
+            }
+        };
+
+        // Modal Controls
+        function openClassModal(classKey) {
+            const data = classDetails[classKey];
+            if (!data) return;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            const tagEl = document.getElementById('modalTag');
+            tagEl.textContent = data.tag;
+            tagEl.style.backgroundColor = data.tagBg;
+            tagEl.style.color = data.tagColor;
+
+            const bodyEl = document.getElementById('modalBody');
+            bodyEl.innerHTML = data.paragraphs.map(p => `<p>${p}</p>`).join('');
+
+            document.getElementById('classModal').classList.add('active');
+        }
+
+        function closeClassModal() {
+            document.getElementById('classModal').classList.remove('active');
+        }
+
+        function handleBackdropClick(event) {
+            if (event.target === document.getElementById('classModal')) {
+                closeClassModal();
+            }
+        }
+
+        // Dismiss modal with Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeClassModal();
+        });
+
+        // Model Inference
+        const fileInput = document.getElementById('fileInput');
+        const statusText = document.getElementById('statusText');
+
+        fileInput.addEventListener('change', async () => {
+            if (!fileInput.files.length) return;
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            statusText.textContent = 'Analyzing image...';
+            statusText.style.color = '#800020';
+
+            try {
+                const response = await fetch('/predict', { method: 'POST', body: formData });
+                const result = await response.json();
+                if (response.ok) {
+                    statusText.innerHTML = `Predicted: <span style="color:#800020; font-weight:800;">${result.prediction}</span> (${result.confidence})`;
+                } else {
+                    statusText.textContent = result.error || 'Prediction failed';
+                    statusText.style.color = '#dc2626';
+                }
+            } catch (err) {
+                statusText.textContent = 'Server connection error';
+                statusText.style.color = '#dc2626';
+            }
+        });
+    </script>
+</body>
+</html>
